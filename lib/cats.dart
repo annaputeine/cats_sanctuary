@@ -1,4 +1,4 @@
-import 'package:cat_sanctuary/Cat.dart';
+import 'package:cat_sanctuary/cat.dart';
 
 class Cats {
   static const catDescription =

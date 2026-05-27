@@ -1,4 +1,4 @@
-import 'package:cat_sanctuary/Cat.dart';
+import 'package:cat_sanctuary/cat.dart';
 import 'package:flutter/cupertino.dart';
 
 class CatsListItem extends StatelessWidget {
@@ -33,7 +33,12 @@ class CatsListItem extends StatelessWidget {
                   ),
                 ),
                 Padding(
-                  padding: .fromLTRB(10, 0, 10, 10),
+                  padding: .only(
+                    left: 10,
+                    top: 0,
+                    right: 10,
+                    bottom: 10,
+                  ),
                   child: Text(
                     cat.description,
                     maxLines: 3,

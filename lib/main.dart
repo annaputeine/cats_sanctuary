@@ -31,15 +31,23 @@ class CatsMainPage extends StatefulWidget {
 }
 
 class _CatsMainPageState extends State<CatsMainPage> {
-  int _selectedIndex = 0;
-  bool _showCat = false;
+  var _selectedIndex = 0;
+  var _showCat = false;
+
+  late final DateTime today;
+
+  @override
+  void initState() {
+    super.initState();
+
+    today = DateTime.now();
+  }
 
   @override
   Widget build(BuildContext context) {
-    final today = DateTime.now().second;
-    final index = today % Cats.catList.length;
-    late final title;
-    _showCat ? title = Cats.catList[index].name : title = "Cats";
+    final seconds = today.second;
+    final index = seconds % Cats.catList.length;
+    final title = _showCat ? Cats.catList[index].name : "Cats";
 
     return Scaffold(
       backgroundColor: Colors.grey[50],
@@ -58,7 +66,12 @@ class _CatsMainPageState extends State<CatsMainPage> {
               child: Column(
                 children: [
                   Padding(
-                    padding: .fromLTRB(0, 80, 0, 30),
+                    padding: .only(
+                      left: 0,
+                      top: 80,
+                      right: 0,
+                      bottom: 30,
+                    ),
                     child: Image.network(
                       Cats.catList[index].imageUrl,
                       width: 300,
