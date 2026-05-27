@@ -1,10 +1,13 @@
-import 'package:cat_sanctuary/cat.dart';
+import 'package:cat_sanctuary/model/cat.dart';
 import 'package:flutter/cupertino.dart';
 
 class CatsListItem extends StatelessWidget {
   final Cat cat;
 
-  const CatsListItem({super.key, required this.cat});
+  const CatsListItem({
+    super.key,
+    required this.cat,
+  });
 
   @override
   Widget build(BuildContext context) {
