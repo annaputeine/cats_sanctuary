@@ -1,10 +1,18 @@
+import 'package:cat_sanctuary/page/cat_detail_page.dart';
 import 'package:flutter/material.dart';
 import 'package:cat_sanctuary/widget/cats_list_item.dart';
 import 'package:cat_sanctuary/model/cats.dart';
 
-class HomePage extends StatelessWidget {
+import '../model/cat.dart';
+
+class HomePage extends StatefulWidget {
   const HomePage({super.key});
 
+  @override
+  State<StatefulWidget> createState() => _HomePageState();
+}
+
+class _HomePageState extends State<HomePage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -44,7 +52,10 @@ class HomePage extends StatelessWidget {
             child: ListView.builder(
               itemCount: Cats.catList.length,
               itemBuilder: (BuildContext context, int index) {
-                return CatsListItem(cat: Cats.catList[index]);
+                return GestureDetector(
+                  onTap: () => _showCatDetail(context: context, cat: Cats.catList[index]),
+                  child: CatsListItem(cat: Cats.catList[index]),
+                );
               },
             ),
           ),
@@ -52,4 +63,14 @@ class HomePage extends StatelessWidget {
       ),
     );
   }
+
+  void _showCatDetail({
+    required BuildContext context,
+    required Cat cat,
+  }) => Navigator.push(
+    context,
+    MaterialPageRoute(
+      builder: (context) => CatDetailPage(cat: cat),
+    ),
+  );
 }
