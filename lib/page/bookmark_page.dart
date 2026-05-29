@@ -1,3 +1,4 @@
+/*
 import 'package:cat_sanctuary/widget/cat_carousel_item.dart';
 import 'package:cat_sanctuary/model/cats.dart';
 import 'package:flutter/material.dart';
@@ -24,7 +25,7 @@ class BookmarkPage extends StatelessWidget {
           Expanded(
             child: CarouselView.builder(
               itemExtent: 400,
-              itemCount: Cats.catList.length,
+              itemCount: _cats.length,
               itemBuilder: (context, index) {
                 return GestureDetector(
                   onTap: () {
@@ -39,7 +40,7 @@ class BookmarkPage extends StatelessWidget {
                       ),
                     );
                   },
-                  child: CatCarouselItem(cat: Cats.catList[index]),
+                  child: CatCarouselItem(cat: _cats[index]),
                 );
               },
             ),
@@ -49,3 +50,4 @@ class BookmarkPage extends StatelessWidget {
     );
   }
 }
+ */

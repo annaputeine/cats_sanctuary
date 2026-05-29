@@ -1,10 +1,13 @@
-import 'package:cat_sanctuary/model/cat.dart';
+import 'package:cat_sanctuary/repository/cats_repository.dart';
+import 'package:flutter/material.dart';
 
-class Cats {
+import '../model/cat.dart';
+
+class InMemoryCatsRepository implements CatsRepository {
   static const catDescription =
       'This will be cat description, very long description of a cat, this will be cat description, very long description of a cat, his will be cat description, very long description of a cat, his will be cat description, very long description of a cat, this will be cat description, very long description of a cat, his will be cat description, very long description of a cat, his will be cat description, very long description of a cat';
 
-  static final catList = <Cat>[
+  final List<Cat> _cats = [
     Cat(
       id: 1,
       name: 'Tabby Cat',
@@ -297,23 +300,17 @@ class Cats {
     ),
   ];
 
-  /*
-  static Set<int> adoptedCatsIds = {};
+  @override
+  Future<List<Cat>> getCats(String query) {
+    if (query.trim().isEmpty) {
+      return Future.value(_cats);
+    }
 
-  static List<Cat> getAdoptedCats() {
-    return catList.where((cat) => adoptedCatsIds.contains(cat.id)).toList();
-  }
+    return Future.value(_cats.where((cat) {
+      final catNameLower = cat.name.toLowerCase();
+      final searchParamLower = query.toLowerCase();
 
-  static List<Cat> getAvailableCats() {
-    return catList.where((cat) => !adoptedCatsIds.contains(cat.id)).toList();
+      return catNameLower.contains(searchParamLower);
+    }).toList());
   }
-
-  static void adoptCat(int catId) {
-    adoptedCatsIds.add(catId);
-  }
-
-  static bool isCatAdopted(int catId) {
-    return adoptedCatsIds.contains(catId);
-  }
-   */
 }

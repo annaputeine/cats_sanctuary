@@ -1,6 +1,6 @@
 import 'package:cat_sanctuary/page/bookmark_page.dart';
 import 'package:cat_sanctuary/page/day_page.dart';
-import 'package:cat_sanctuary/page/home_page.dart';
+import 'package:cat_sanctuary/page/search_page.dart';
 import 'package:cat_sanctuary/page/person_page.dart';
 import 'package:flutter/material.dart';
 
@@ -21,10 +21,10 @@ class _CatsMainPageState extends State<CatsMainPage> {
       body: IndexedStack(
         index: _currentIndex,
         children: [
-          HomePage(),
+          SearchPage(),
           DayPage(),
-          BookmarkPage(),
-          PersonPage(),
+          //BookmarkPage(),
+          //PersonPage(),
         ],
       ),
       bottomNavigationBar: BottomNavigationBar(

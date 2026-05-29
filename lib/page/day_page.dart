@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
-
-import '../model/cats.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
+import 'dart:math';
+import '../model/cat.dart';
+import '../repository/cats_repository.dart';
 
 class DayPage extends StatefulWidget {
   const DayPage({
@@ -12,24 +14,45 @@ class DayPage extends StatefulWidget {
 }
 
 class _DayPageState extends State<DayPage> {
-  late final DateTime now;
+  late final CatsRepository catsRepository;
+
+  List<Cat> _cats = [];
+  bool _isLoading = true;
 
   @override
   void initState() {
     super.initState();
-    now = DateTime.now();
+    catsRepository = context.read<CatsRepository>();
+
+    _loadCats();
+  }
+
+  Future<void> _loadCats() async {
+    final cats = await catsRepository.getCats("");
+
+    setState(() {
+      _cats = cats;
+      _isLoading = false;
+    });
   }
 
   @override
   Widget build(BuildContext context) {
-    final seconds = now.second;
-    final index = seconds % Cats.catList.length;
+    if (_isLoading) {
+      return const Scaffold(
+        body: Center(
+          child: CircularProgressIndicator(),
+        ),
+      );
+    }
+
+    final index = Random().nextInt(_cats.length);
 
     return Scaffold(
       backgroundColor: Colors.grey[50],
       appBar: AppBar(
-        title: Text(Cats.catList[index].name),
-        titleTextStyle: TextStyle(
+        title: Text(_cats[index].name),
+        titleTextStyle: const TextStyle(
           fontSize: 23,
           color: Colors.white,
           fontWeight: .bold,
@@ -41,21 +64,19 @@ class _DayPageState extends State<DayPage> {
         child: Column(
           children: [
             Padding(
-              padding: .only(
-                left: 0,
+              padding: const EdgeInsets.only(
                 top: 80,
-                right: 0,
                 bottom: 30,
               ),
               child: Image.network(
-                Cats.catList[index].imageUrl,
+                _cats[index].imageUrl,
                 width: 300,
-                fit: .cover,
+                fit: BoxFit.cover,
               ),
             ),
             Text(
-              Cats.catList[index].name,
-              style: TextStyle(
+              _cats[index].name,
+              style: const TextStyle(
                 color: Colors.brown,
                 fontWeight: .bold,
               ),

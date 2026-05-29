@@ -1,3 +1,5 @@
+import 'package:equatable/equatable.dart';
+
 class Cat {
   final int id;
   final String name;
