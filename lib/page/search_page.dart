@@ -15,34 +15,19 @@ class SearchPage extends StatefulWidget {
 }
 
 class _SearchPageState extends State<SearchPage> {
-  late final CatsRepository catsRepository;
+  late final CatsRepository _catsRepository;
 
-  Future<List<Cat>>? _catsFuture;
-  final TextEditingController _searchController = TextEditingController();
+  final _searchController = TextEditingController();
+
   Timer? _debouncer;
+  Future<List<Cat>>? _catsFuture;
 
   @override
   void initState() {
     super.initState();
-    catsRepository = context.read<CatsRepository>();
-    _catsFuture = catsRepository.getCats("");
+    _catsRepository = context.read<CatsRepository>();
+    _catsFuture = _catsRepository.getCats("");
     _searchController.addListener(_debounceSearch);
-  }
-
-  @override
-  void dispose() {
-    _searchController.dispose();
-    _debouncer?.cancel();
-    super.dispose();
-  }
-
-  void _debounceSearch() {
-    _debouncer?.cancel();
-
-    _debouncer = Timer(
-      const Duration(milliseconds: 500),
-          () => _performSearch(_searchController.text),
-    );
   }
 
   @override
@@ -59,45 +44,45 @@ class _SearchPageState extends State<SearchPage> {
         centerTitle: false,
         backgroundColor: Colors.brown,
       ),
-      body: FutureBuilder<List<Cat>>(
-        future: _catsFuture,
-        builder: (context, snapshot) {
-          if (snapshot.connectionState == ConnectionState.waiting) {
-            return const Center(
-              child: CircularProgressIndicator(),
-            );
-          }
-
-          final catList = snapshot.data ?? [];
-
-          return Column(
-            children: [
-              Padding(
-                padding: const EdgeInsets.all(15),
-                child: SearchBar(
-                  controller: _searchController,
-                  hintText: "Search",
-                  onSubmitted: (query) {
-                    _debouncer?.cancel();
-                    _performSearch(query);
-                  },
-                  elevation: const WidgetStatePropertyAll(0.0),
-                  shape: WidgetStatePropertyAll(
-                    RoundedRectangleBorder(
-                      borderRadius: BorderRadius.circular(15),
-                      side: const BorderSide(
-                        color: Colors.grey,
-                        width: 1,
-                      ),
-                    ),
-                  ),
-                  backgroundColor: WidgetStatePropertyAll(
-                    Colors.grey[50],
+      body: Column(
+        children: [
+          Padding(
+            padding: const EdgeInsets.all(15),
+            child: SearchBar(
+              controller: _searchController,
+              hintText: "Search",
+              onSubmitted: (query) {
+                _debouncer?.cancel();
+                _performSearch(query);
+              },
+              elevation: const WidgetStatePropertyAll(0.0),
+              shape: WidgetStatePropertyAll(
+                RoundedRectangleBorder(
+                  borderRadius: BorderRadius.circular(15),
+                  side: const BorderSide(
+                    color: Colors.grey,
+                    width: 1,
                   ),
                 ),
               ),
-              Expanded(
-                child: catList.isEmpty
+              backgroundColor: WidgetStatePropertyAll(
+                Colors.grey[50],
+              ),
+            ),
+          ),
+          Expanded(
+            child: FutureBuilder<List<Cat>>(
+              future: _catsFuture,
+              builder: (context, snapshot) {
+                if (snapshot.connectionState == ConnectionState.waiting) {
+                  return const Center(
+                    child: CircularProgressIndicator(),
+                  );
+                }
+
+                final catList = snapshot.data ?? [];
+
+                return catList.isEmpty
                     ? const Center(child: Text('No cats found.'))
                     : ListView.builder(
                         itemCount: catList.length,
@@ -111,11 +96,11 @@ class _SearchPageState extends State<SearchPage> {
                             child: CatsListItem(cat: currentCat),
                           );
                         },
-                      ),
-              ),
-            ],
-          );
-        },
+                      );
+              },
+            ),
+          ),
+        ],
       ),
       floatingActionButton: FloatingActionButton(
         onPressed: () {
@@ -129,9 +114,25 @@ class _SearchPageState extends State<SearchPage> {
     );
   }
 
+  @override
+  void dispose() {
+    _searchController.dispose();
+    _debouncer?.cancel();
+    super.dispose();
+  }
+
+  void _debounceSearch() {
+    _debouncer?.cancel();
+
+    _debouncer = Timer(
+      const Duration(seconds: 1),
+      () => _performSearch(_searchController.text),
+    );
+  }
+
   void _performSearch(String query) {
     setState(() {
-      _catsFuture = catsRepository.getCats(query);
+      _catsFuture = _catsRepository.getCats(query);
     });
   }
 
